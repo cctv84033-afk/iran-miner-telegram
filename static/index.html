@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#081322"><title>Iran Miner</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar"><div class="brand-mark">IM</div><div><b>IRAN MINER</b><small>مرکز مدیریت استخراج</small></div><span class="live-dot">● آنلاین</span></header>
+<main>
+<div class="notice">نسخه نمایشی — موجودی‌ها اعتبار آزمایشی هستند و انتقال واقعی وجه انجام نمی‌شود.</div>
+<section id="authView" class="panel hidden">
+  <div class="eyebrow">WELCOME BACK</div><h1>ورود به فضای ماینر</h1><p class="muted">حساب برنامه به شناسه تلگرام شما متصل می‌شود.</p>
+  <div id="registerFields"><label>نام کاربری</label><input id="regUser" placeholder="نام کاربری دلخواه"><label>رمز اختصاصی</label><input id="regPass" type="password" placeholder="حداقل ۶ کاراکتر"><label>کد معرف (اختیاری)</label><input id="refCode" placeholder="مثلاً R482916" maxlength="7"><button class="btn primary" onclick="register()">ساخت حساب</button></div>
+  <div id="loginFields" class="hidden"><label>نام کاربری</label><input id="loginUser"><label>رمز</label><input id="loginPass" type="password"><button class="btn primary" onclick="login()">ورود</button><button class="text-btn" onclick="forgot()">فراموشی رمز</button></div>
+</section>
+<section id="mainView" class="hidden">
+  <div class="hero"><div class="eyebrow">YOUR MINING SPACE</div><h1>سلام، <span id="usernameLabel">ماینر</span></h1><p>داشبورد اختصاصی شما</p><div class="balance-row"><div><small>موجودی تومان</small><strong id="tomanBalance">۰</strong></div><div><small>موجودی USDT</small><strong id="usdtBalance">۰</strong></div></div></div>
+  <section class="panel mining-panel"><div class="section-head"><div><span class="eyebrow">MINING SESSION</span><h2>ماینر تبری</h2></div><span id="miningStatus" class="pill">آماده</span></div>
+    <div class="machine" id="machineStage"><video id="minerVideo" class="miner-video hidden" loop muted playsinline preload="metadata"><source src="/static/miner.mp4" type="video/mp4">مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.</video><div id="machineFallback"><div class="orbit o1"></div><div class="orbit o2"></div><div class="core">IM<span>✦</span></div><div class="machine-caption">IRAN MINER / DIGITAL CORE</div></div></div>
+    <div class="earning"><span>پاداش کامل یک دوره ۲۴ ساعته</span><b>۴۲٬۰۰۰ تومان</b></div>
+    <div class="progress"><i id="progressBar"></i></div><div class="timer-row"><span id="timerText">برای شروع آماده است</span><span id="percentText">۰٪</span></div>
+    <div class="actions"><button id="mineBtn" class="btn primary" onclick="startMining()">شروع استخراج</button><button id="claimBtn" class="btn gold hidden" onclick="claimMining()">دریافت درآمد</button><button id="stopBtn" class="btn ghost hidden" onclick="stopMining()">توقف</button></div>
+    <p class="tiny">با تکمیل ۲۴ ساعت، دوره متوقف می‌شود و تا دریافت اعتبار، دوره بعدی آغاز نخواهد شد. توقف دستی پیش از پایان دوره، پاداش کامل ایجاد نمی‌کند.</p>
+  </section>
+  <section class="grid">
+    <button class="tile" onclick="showTab('wallet')"><span>◈</span><b>کیف پول</b><small>موجودی و درخواست‌ها</small></button>
+    <button class="tile" onclick="showTab('referral')"><span>↗</span><b>دعوت دوستان</b><small>۱۵٬۰۰۰ تومان اعتبار آزمایشی</small></button>
+    <button class="tile" onclick="showTab('account')"><span>⚙</span><b>حساب کاربری</b><small>امنیت و پشتیبانی</small></button>
+  </section>
+  <section id="walletTab" class="panel hidden"><div class="section-head"><h2>کیف پول</h2><button class="text-btn" onclick="showTab('home')">بازگشت</button></div><div class="wallet-cards"><div class="wallet-card"><small>موجودی تومانی</small><b id="walletToman">۰ تومان</b><button class="btn primary" onclick="openWithdraw('toman')">برداشت تومانی</button></div><div class="wallet-card"><small>موجودی تتری</small><b id="walletUsdt">۰ USDT</b><button class="btn primary" onclick="openWithdraw('usdt')">برداشت تتری</button></div></div>
+  <div id="withdrawForm" class="subpanel hidden"><h3 id="withdrawTitle">درخواست برداشت</h3><label id="destLabel">شماره کارت</label><input id="destination" placeholder="شماره کارت"><div id="ownerWrap"><label>نام صاحب کارت</label><input id="ownerName" placeholder="نام صاحب کارت"></div><label>مبلغ برداشت (تومان)</label><input id="amount" type="number" min="400000" step="1000" placeholder="حداقل ۴۰۰٬۰۰۰ تومان"><small class="muted">حداقل برداشت هر دو روش ۴۰۰٬۰۰۰ تومان است؛ نرخ تبدیل نمایشی هر تتر ۲۷۰٬۰۰۰ تومان.</small><button class="text-btn" onclick="setMax()">کل موجودی</button><label>رمز برداشت</label><input id="withdrawPin" type="password" placeholder="رمز برداشت"><button class="btn gold" onclick="submitWithdraw()">تأیید درخواست</button></div>
+  <h3>تاریخچه درخواست‌ها</h3><div id="withdrawHistory" class="history muted">هنوز درخواستی ثبت نشده است.</div></section>
+  <section id="referralTab" class="panel hidden"><div class="section-head"><h2>دعوت دوستان</h2><button class="text-btn" onclick="showTab('home')">بازگشت</button></div><p class="muted">با دعوت موفق یک کاربر جدید، ۱۵٬۰۰۰ تومان اعتبار آزمایشی دریافت می‌کنید.</p><div class="ref-code" id="myRefCode">R------</div><button class="btn primary" onclick="copyRef()">کپی کد دعوت</button><p class="tiny">هر حساب تلگرام فقط یک‌بار می‌تواند با کد معرف ثبت‌نام کند.</p></section>
+  <section id="accountTab" class="panel hidden"><div class="section-head"><h2>تنظیمات حساب</h2><button class="text-btn" onclick="showTab('home')">بازگشت</button></div><label>تغییر رمز فعلی</label><input id="oldPass" type="password" placeholder="رمز فعلی"><label>رمز جدید</label><input id="newPass" type="password" placeholder="رمز جدید"><button class="btn primary" onclick="changePassword()">ذخیره رمز</button><hr><div id="pinSetup"><h3>تأیید رمز برداشت</h3><label>رمز برداشت</label><input id="pin1" type="password" placeholder="رمز برداشت"><label>تکرار رمز برداشت</label><input id="pin2" type="password" placeholder="تکرار رمز برداشت"><button class="btn gold" onclick="setPin()">ثبت رمز برداشت</button></div><p class="support">پشتیبانی: <a href="https://t.me/Poshtibany_miner" target="_blank" rel="noopener">ورود به پشتیبانی</a></p></section>
+</section>
+<div id="toast" class="toast"></div>
+</main>
+<footer>IRAN MINER <span>•</span> DEMO EXPERIENCE</footer>
+</div>
+<script src="/static/app.js"></script>
+</body></html>
